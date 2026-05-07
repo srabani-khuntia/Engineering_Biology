@@ -125,15 +125,68 @@
             td { border: none; border-bottom: 1px solid #eee; position: relative; padding-left: 50%; }
             td:before { position: absolute; top: 12px; left: 6px; width: 45%; padding-right: 10px; white-space: nowrap; font-weight: bold; }
         }
+            /* ── Scroll nav bar ── */
+        #module-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(26, 42, 74, 0.9);
+            backdrop-filter: blur(8px);
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            padding: 10px 20px;
+            z-index: 1000;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.4);
+            opacity: 0;
+            transform: translateY(-100%);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            pointer-events: none;
+            box-sizing: border-box;
+        }
+        #module-nav.visible {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: all;
+        }
+        #module-nav a {
+            color: #a8c4e0;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 0.88rem;
+            letter-spacing: 0.5px;
+            padding: 6px 16px;
+            border-radius: 20px;
+            border: 1px solid rgba(168, 196, 224, 0.25);
+            transition: background 0.2s, color 0.2s;
+            white-space: nowrap;
+        }
+        #module-nav a:hover {
+            background: rgba(168, 196, 224, 0.15);
+            color: #ffffff;
+        }
+        #module-nav a.active {
+            background: rgba(168, 196, 224, 0.25);
+            color: #ffffff;
+            border-color: rgba(168, 196, 224, 0.6);
+        }
     </style>
 </head>
 <body>
+    <nav id="module-nav">
+        <a href="#module-1">Module 1</a>
+        <a href="#module-2">Module 2</a>
+        <a href="#module-3">Module 3</a>
+        <a href="#module-4">Module 4</a>
+        <a href="#module-5">Module 5</a>
+    </nav>
 
     <div class="container">
         
         <!-- MODULE 1 -->
         <div class="main-heading">
-            <h1><strong>MODULE-1</strong></h1>
+            <h1 id="module-1"><strong>MODULE-1</strong></h1>
         </div>
 
         <!-- Section 1: Short Answers -->
@@ -537,7 +590,7 @@
 
         <!-- MODULE 2 -->
         <div class="main-heading module-2">
-            <h1><strong>MODULE-2</strong></h1>
+            <h1 id="module-2"><strong>MODULE-2</strong></h1>
         </div>
 
         <!-- Section 1: Short Answers (Module 2) -->
@@ -841,7 +894,7 @@
 
 	<!-- MODULE 3 -->
         <div class="main-heading">
-            <h1><strong>MODULE-3</strong></h1>
+            <h1 id="module-3"><strong>MODULE-3</strong></h1>
         </div>
 
         <!-- Section 1: Short Answers -->
@@ -1290,7 +1343,7 @@
 	
 	<!-- MODULE 4 -->
         <div class="main-heading module-2">
-            <h1><strong>MODULE-4</strong></h1>
+            <h1 id="module-4"><strong>MODULE-4</strong></h1>
         </div>
 
         <!-- Section 1: Short Answers (Module 4) -->
@@ -1751,7 +1804,7 @@
 
         <!-- MODULE 5 -->
         <div class="main-heading module-2">
-            <h1><strong>MODULE-5</strong></h1>
+            <h1 id="module-5"><strong>MODULE-5</strong></h1>
         </div>
 
         <!-- Section 1: Short Answers (Module 5) -->
@@ -2073,6 +2126,46 @@
         </div>
     </div>
     
+    <script>
+        (function() {
+            var nav = document.getElementById('module-nav');
+            var moduleIds = ['module-1','module-2','module-3','module-4','module-5'];
+            var links = nav.querySelectorAll('a');
+            var hideTimer = null;
+
+            window.addEventListener('scroll', function() {
+                nav.classList.add('visible');
+                clearTimeout(hideTimer);
+                hideTimer = setTimeout(function() {
+                    nav.classList.remove('visible');
+                }, 2000);
+                highlightActive();
+            });
+
+            function highlightActive() {
+                var current = '';
+                moduleIds.forEach(function(id) {
+                    var el = document.getElementById(id);
+                    if (el && el.getBoundingClientRect().top <= 100) {
+                        current = id;
+                    }
+                });
+                links.forEach(function(a) {
+                    a.classList.toggle('active', a.getAttribute('href') === '#' + current);
+                });
+            }
+
+            links.forEach(function(a) {
+                a.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    var target = document.getElementById(a.getAttribute('href').slice(1));
+                    if (target) {
+                        window.scrollTo({ top: target.offsetTop - 20, behavior: 'smooth' });
+                    }
+                });
+            });
+        })();
+    </script>
 </body>
 
 </html>
